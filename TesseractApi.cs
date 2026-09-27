@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Runtime.InteropServices;
 
 namespace TransactionOCR;
@@ -18,35 +19,45 @@ internal static class LinuxTesseract
 {
     static LinuxTesseract()
     {
-        NativeLibrary.Load("/usr/lib/libleptonica.so.6");
-        NativeLibrary.Load("/usr/lib/libtesseract.so.5");
+        NativeLibrary.Load(
+            Path.Combine(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "x64"),
+                "tesseract55.dll"
+            )
+        );
+        NativeLibrary.Load(
+            Path.Combine(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "x64"),
+                "leptonica-1.85.0.dll"
+            )
+        );
     }
 
-    [DllImport("libtesseract.so.5")]
+    [DllImport("tesseract55.dll")]
     private static extern IntPtr TessBaseAPICreate();
 
-    [DllImport("libtesseract.so.5")]
+    [DllImport("tesseract55.dll")]
     private static extern int TessBaseAPIInit3(IntPtr handle, string datapath, string language);
 
-    [DllImport("libtesseract.so.5")]
+    [DllImport("tesseract55.dll")]
     private static extern void TessBaseAPISetImage2(IntPtr handle, IntPtr pix);
 
-    [DllImport("libtesseract.so.5")]
+    [DllImport("tesseract55.dll")]
     private static extern IntPtr TessBaseAPIGetUTF8Text(IntPtr handle);
 
-    [DllImport("libtesseract.so.5")]
+    [DllImport("tesseract55.dll")]
     private static extern void TessDeleteText(IntPtr text);
 
-    [DllImport("libtesseract.so.5")]
+    [DllImport("tesseract55.dll")]
     private static extern void TessBaseAPIEnd(IntPtr handle);
 
-    [DllImport("libtesseract.so.5")]
+    [DllImport("tesseract55.dll")]
     private static extern void TessBaseAPIDelete(IntPtr handle);
 
-    [DllImport("libleptonica.so.6")]
+    [DllImport("leptonica-1.85.0.dll")]
     private static extern IntPtr pixRead(string filename);
 
-    [DllImport("libleptonica.so.6")]
+    [DllImport("leptonica-1.85.0.dll")]
     private static extern void pixDestroy(ref IntPtr pix);
 
     public static string OcrImage(string imagePath, string tessDataPath)
@@ -95,25 +106,40 @@ internal static class LinuxTesseract
 
 internal static class WindowsTesseract
 {
-    [DllImport("libtesseract-5.dll")]
+    static WindowsTesseract()
+    {
+        NativeLibrary.Load(
+            Path.Combine(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "x64"),
+                "leptonica-1.85.0.dll"
+            )
+        );
+        NativeLibrary.Load(
+            Path.Combine(
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "x64"),
+                "tesseract55.dll"
+            )
+        );
+    }
+    [DllImport("tesseract55.dll")]
     private static extern IntPtr TessBaseAPICreate();
 
-    [DllImport("libtesseract-5.dll")]
+    [DllImport("tesseract55.dll")]
     private static extern int TessBaseAPIInit3(IntPtr handle, string datapath, string language);
 
-    [DllImport("libtesseract-5.dll")]
+    [DllImport("tesseract55.dll")]
     private static extern void TessBaseAPISetImage2(IntPtr handle, IntPtr pix);
 
-    [DllImport("libtesseract-5.dll")]
+    [DllImport("tesseract55.dll")]
     private static extern IntPtr TessBaseAPIGetUTF8Text(IntPtr handle);
 
-    [DllImport("libtesseract-5.dll")]
+    [DllImport("tesseract55.dll")]
     private static extern void TessDeleteText(IntPtr text);
 
-    [DllImport("libtesseract-5.dll")]
+    [DllImport("tesseract55.dll")]
     private static extern void TessBaseAPIEnd(IntPtr handle);
 
-    [DllImport("libtesseract-5.dll")]
+    [DllImport("tesseract55.dll")]
     private static extern void TessBaseAPIDelete(IntPtr handle);
 
     [DllImport("libleptonica-6.dll")]
